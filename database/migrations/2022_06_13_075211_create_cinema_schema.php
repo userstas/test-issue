@@ -36,7 +36,144 @@ class CreateCinemaSchema extends Migration
      */
     public function up()
     {
-        throw new \Exception('implement in coding task 4, you can ignore this exception if you are just running the initial migrations.');
+        Schema::create('films', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('duration')->nullable();
+            $table->timestamps();
+        });
+
+        Schema::create('showrooms', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->integer('number_of_seats');
+            $table->timestamps();
+        });
+
+        Schema::create('shows', function (Blueprint $table) {
+            $table->id();
+            $table->float('price')->nullable();
+            $table->string('currency_code');
+            $table->date('start');
+            $table->date('finish');
+            $table->boolean('is_booked_out')->default(false);
+
+            $table->integer('film_id')->nullable();
+            $table->foreign('film_id')
+                ->references('id')
+                ->on('films')
+                ->onDelete('set null');
+
+            $table->integer('showroom_id')->nullable();
+            $table->foreign('showroom_id')
+                ->references('id')
+                ->on('showrooms')
+                ->onDelete('set null');
+            $table->timestamps();
+        });
+
+        Schema::create('pays', function (Blueprint $table) {
+            $table->id();
+            $table->float('amount');
+            $table->string('currency_code');
+            $table->dateTime('time_of_pay');
+
+            $table->integer('show_id')->nullable();
+            $table->foreign('show_id')
+                ->references('id')
+                ->on('shows')
+                ->onDelete('set null');
+
+            $table->timestamps();
+        });
+
+        Schema::create('seats', function (Blueprint $table) {
+            $table->id();
+            $table->integer('number');
+            $table->float('cost')->nullable();
+            $table->boolean('is_vip')->default(false);
+            $table->boolean('is_for_couple')->default(false);
+            $table->string('percentage_premium')->nullable(); // percents
+            $table->float('percentage_premium_multiplier')->nullable(); //value to increase a standard value
+            $table->boolean('is_booked')->default(false);
+
+            $table->integer('showroom_id')->nullable();
+            $table->foreign('showroom_id')
+                ->references('id')
+                ->on('showrooms')
+                ->onDelete('set null');
+
+//            $table->integer('shows_id')->nullable();
+//            $table->foreign('shows_id')
+//                ->references('id')
+//                ->on('shows')
+//                ->onDelete('set null');
+            $table->timestamps();
+        });
+
+        Schema::create('user_bookings', function (Blueprint $table) {
+            $table->id();
+            $table->dateTime('booking_time');
+            $table->integer('seat_id')->nullable();
+            $table->foreign('seat_id')
+                ->references('id')
+                ->on('seats')
+                ->onDelete('set null');
+
+            $table->integer('user_id')->nullable();
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->onDelete('set null');
+            $table->timestamps();
+        });
+
+        Schema::create('tokets', function (Blueprint $table) {
+            $table->bigInteger('id');
+
+            $table->integer('film_id')->nullable();
+            $table->foreign('film_id')
+                ->references('id')
+                ->on('films')
+                ->onDelete('set null');
+
+            $table->integer('seat_id')->nullable();
+            $table->foreign('seat_id')
+                ->references('id')
+                ->on('seats')
+                ->onDelete('set null');
+
+            $table->integer('show_id')->nullable();
+            $table->foreign('show_id')
+                ->references('id')
+                ->on('shows')
+                ->onDelete('set null');
+
+            $table->integer('showroom_id')->nullable();
+            $table->foreign('showroom_id')
+                ->references('id')
+                ->on('showrooms')
+                ->onDelete('set null');
+            $table->timestamps();
+        });
+
+        Schema::create('shows_seats', function (Blueprint $table) {
+            $table->bigInteger('id');
+            $table->integer('seat_id')->nullable();
+            $table->foreign('seat_id')
+                ->references('id')
+                ->on('seats')
+                ->onDelete('set null');
+
+            $table->integer('show_id')->nullable();
+            $table->foreign('show_id')
+                ->references('id')
+                ->on('shows')
+                ->onDelete('set null');
+            $table->timestamps();
+        });
+
+//        throw new \Exception('implement in coding task 4, you can ignore this exception if you are just running the initial migrations.');
     }
 
     /**

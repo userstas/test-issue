@@ -103,8 +103,8 @@ class EventsController extends BaseController
 
     public function getEventsWithWorkshops()
     {
-        $data = Event::with('workshops')->get();
-        return response()->json($data);
+        $events = Event::with('workshops')->get();
+        return response()->json($events);
 //        throw new \Exception('implement in coding task 1');
     }
 
@@ -183,12 +183,12 @@ class EventsController extends BaseController
      */
 
     public function getFutureEventsWithWorkshops() {
-        $data = Event::whereHas('workshops', function ($query) {
+        $events = Event::whereHas('workshops', function ($query) {
             $query->whereDate('start', '>=', Carbon::now());
         })
             ->with('workshops')
             ->get();
-        return response()->json($data);
+        return response()->json($events);
 //        throw new \Exception('implement in coding task 2');
     }
 }
