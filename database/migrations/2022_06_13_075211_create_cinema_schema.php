@@ -103,11 +103,6 @@ class CreateCinemaSchema extends Migration
                 ->on('showrooms')
                 ->onDelete('set null');
 
-//            $table->integer('shows_id')->nullable();
-//            $table->foreign('shows_id')
-//                ->references('id')
-//                ->on('shows')
-//                ->onDelete('set null');
             $table->timestamps();
         });
 
@@ -128,7 +123,7 @@ class CreateCinemaSchema extends Migration
             $table->timestamps();
         });
 
-        Schema::create('tokets', function (Blueprint $table) {
+        Schema::create('tickets', function (Blueprint $table) {
             $table->bigInteger('id');
 
             $table->integer('film_id')->nullable();
@@ -183,5 +178,13 @@ class CreateCinemaSchema extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('shows_seats');
+        Schema::dropIfExists('tickets');
+        Schema::dropIfExists('user_bookings');
+        Schema::dropIfExists('seats');
+        Schema::dropIfExists('pays');
+        Schema::dropIfExists('shows');
+        Schema::dropIfExists('showrooms');
+        Schema::dropIfExists('films');
     }
 }
