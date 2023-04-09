@@ -4,10 +4,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\MenuItem;
+use App\Repository\MenuItemRepository;
 use Illuminate\Routing\Controller as BaseController;
 
 class MenuController extends BaseController
 {
+    protected $repository;
+
+    public function __construct(MenuItemRepository $menuItemRepository)
+    {
+        $this->repository = $menuItemRepository;
+    }
     /* TODO: complete getMenuItems so that it returns a nested menu structure from the database
     Requirements
     - the eloquent expressions should result in EXACTLY one SQL query no matter the nesting level or the amount of menu items.
@@ -94,9 +101,8 @@ class MenuController extends BaseController
 
     public function getMenuItems()
     {
-        $menu_items = MenuItem::where('parent_id', null)->get();
-
-        return response()->json($menu_items);
-//        throw new \Exception('implement in coding task 3');
+        $menuItems = $this->repository->getMenuItems();
+        return response()->json(
+            $menuItems);
     }
 }

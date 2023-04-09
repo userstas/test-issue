@@ -10,17 +10,4 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class MenuItem extends Model
 {
-
-    public $with = [
-        'children'
-    ];
-    public function parent(): BelongsTo
-    {
-        return $this->belongsTo(MenuItem::class, 'parent_id');
-    }
-
-    public function children(): HasMany
-    {
-        return $this->hasMany(MenuItem::class, 'parent_id');
-    }
 }
